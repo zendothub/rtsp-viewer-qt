@@ -1,0 +1,4 @@
+/home/seeker/Downloads/rtsp-viewer-qt/build/CMakeFiles/rtsp_player.dir
+/home/seeker/Downloads/rtsp-viewer-qt/build/CMakeFiles/edit_cache.dir
+/home/seeker/Downloads/rtsp-viewer-qt/build/CMakeFiles/rebuild_cache.dir
+/home/seeker/Downloads/rtsp-viewer-qt/build/CMakeFiles/rtsp_player_autogen.dir
