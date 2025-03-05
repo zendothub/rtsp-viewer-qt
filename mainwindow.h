@@ -67,11 +67,12 @@
 #include <QPushButton>   // For the reload button
 #include <QResizeEvent>
 
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit MainWindow(const QString &rtspUrl, const QString &webUrl, const QString &droneName, QWidget *parent = nullptr);
+    explicit MainWindow(const QString &rtspUrl, const QString &webUrl, const QString &droneName,const QString &cookie, QWidget *parent = nullptr);
     ~MainWindow();
 
 protected:
@@ -83,7 +84,7 @@ private:
     QWebEngineView *webView;
     QWidget *centralWidget;
     QHBoxLayout *layout;
-   
+    QString cookie; 
 
     void handleRTSPError();
     // void handleRTSPBuffering(int percent);

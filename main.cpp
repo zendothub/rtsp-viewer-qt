@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon(":/icons/app_icon.png"));    // Hardcoded RTSP stream settings
 
-    if (argc < 4) {
+    if (argc < 5) {
         qDebug() << "Usage: rtsp_player <rtsp_url> <web_url> <drone_name>";
         return -1;
     }
@@ -47,13 +47,17 @@ int main(int argc, char *argv[]) {
     QString rtspUrl = argv[1]; // RTSP Stream URL
     QString webUrl = argv[2];  // Web URL
     QString droneName = argv[3]; // Drone Name
+    QString cookie = argv[4];
 
     qDebug() << "Launching RTSP Player with Hardcoded Settings:";
     qDebug() << "RTSP URL: " << rtspUrl;
     qDebug() << "Web URL: " << webUrl;
     qDebug() << "Drone Name: " << droneName;
+    qDebug() << "Cookie: " << cookie;
 
-    MainWindow w(rtspUrl, webUrl, droneName);
+    MainWindow w(rtspUrl, webUrl, droneName, cookie);
+
+    // MainWindow w(rtspUrl, webUrl, droneName);
     w.show();
 
     return a.exec();

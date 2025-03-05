@@ -163,47 +163,97 @@
 #include <QWebEngineView>
 #include <QResizeEvent>
 #include <QPushButton>
-
-MainWindow::MainWindow(const QString &rtspUrl, const QString &webUrl, const QString &droneName, QWidget *parent)
-    : QMainWindow(parent), player(new QMediaPlayer(this)), videoWidget(new QVideoWidget(this)), 
-      webView(new QWebEngineView(this)) {
+#include <QWebEngineProfile>
+#include <QWebEngineCookieStore>
+#include <QNetworkCookie>
+// MainWindow::MainWindow(const QString &rtspUrl, const QString &webUrl, const QString &droneName, QWidget *parent)
+//     : QMainWindow(parent), player(new QMediaPlayer(this)), videoWidget(new QVideoWidget(this)), 
+//       webView(new QWebEngineView(this)) {
     
-    // Set initial window size to 900x900
+//     // Set initial window size to 900x900
+//     this->resize(900, 900);
+//     this->setWindowTitle(droneName); // Set the window title to the drone name
+
+//     // Create central widget and layout
+//     centralWidget = new QWidget(this);
+//     layout = new QHBoxLayout(centralWidget);
+
+//     // Create video widget (for RTSP stream)
+//     videoWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding); // Ensure it resizes
+//     layout->addWidget(videoWidget, 1);  // Right side for RTSP stream
+
+//     // Create WebEngineView widget (for web URL)
+//     webView->setUrl(QUrl(webUrl));
+//     layout->addWidget(webView, 1);  // Left side for web view
+
+//     // Set the central widget
+//     setCentralWidget(centralWidget);
+
+//     // Create media player and set RTSP stream
+//     player->setVideoOutput(videoWidget);
+//     player->setMedia(QUrl(rtspUrl));
+
+//     // Handle RTSP stream errors
+//     connect(player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error), this, &MainWindow::handleRTSPError);
+
+ 
+
+//     // Handle playback state changes
+//     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::handleRTSPStateChange);
+
+//     // Start playing the stream
+//     player->play();
+
+    
+// }
+
+
+MainWindow::MainWindow(const QString &rtspUrl, const QString &webUrl, const QString &droneName, const QString &cookie, QWidget *parent)
+    : QMainWindow(parent), player(new QMediaPlayer(this)), videoWidget(new QVideoWidget(this)), 
+      webView(new QWebEngineView(this)), cookie(cookie) {
+    
+    // Set initial window size
     this->resize(900, 900);
-    this->setWindowTitle(droneName); // Set the window title to the drone name
+    this->setWindowTitle(droneName);
 
     // Create central widget and layout
     centralWidget = new QWidget(this);
     layout = new QHBoxLayout(centralWidget);
 
-    // Create video widget (for RTSP stream)
-    videoWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding); // Ensure it resizes
-    layout->addWidget(videoWidget, 1);  // Right side for RTSP stream
+    // Video Widget
+    videoWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addWidget(videoWidget, 1);
 
-    // Create WebEngineView widget (for web URL)
+    // Web View
+    QWebEngineProfile *profile = QWebEngineProfile::defaultProfile();
+    QWebEngineCookieStore *cookieStore = profile->cookieStore();
+
+    // Set cookie
+    QNetworkCookie qCookie;
+    qCookie.setName("connect.sid");       // Change this to match the cookie name
+    qCookie.setValue(cookie.toUtf8());
+    qCookie.setDomain(QUrl(webUrl).host());
+    qCookie.setPath("/");
+    qCookie.setSecure(true);
+    qCookie.setHttpOnly(true);
+
+    cookieStore->setCookie(qCookie, QUrl(webUrl));
+
     webView->setUrl(QUrl(webUrl));
-    layout->addWidget(webView, 1);  // Left side for web view
+    layout->addWidget(webView, 1);
 
-    // Set the central widget
     setCentralWidget(centralWidget);
 
-    // Create media player and set RTSP stream
+    // Set up the media player
     player->setVideoOutput(videoWidget);
     player->setMedia(QUrl(rtspUrl));
 
-    // Handle RTSP stream errors
     connect(player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error), this, &MainWindow::handleRTSPError);
-
- 
-
-    // Handle playback state changes
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::handleRTSPStateChange);
 
-    // Start playing the stream
     player->play();
-
-    
 }
+
 
 MainWindow::~MainWindow() {
     player->stop();
