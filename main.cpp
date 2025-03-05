@@ -34,8 +34,11 @@
 #include <QApplication>
 #include <QIcon>
 #include <QDebug>
+#include <QCoreApplication>
 
 int main(int argc, char *argv[]) {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon(":/icons/app_icon.png"));    // Hardcoded RTSP stream settings
 

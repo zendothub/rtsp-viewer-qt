@@ -234,10 +234,13 @@ MainWindow::MainWindow(const QString &rtspUrl, const QString &webUrl, const QStr
     qCookie.setValue(cookie.toUtf8());
     qCookie.setDomain(QUrl(webUrl).host());
     qCookie.setPath("/");
-    qCookie.setSecure(true);
+    qCookie.setSecure(false);
     qCookie.setHttpOnly(true);
 
     cookieStore->setCookie(qCookie, QUrl(webUrl));
+    connect(cookieStore, &QWebEngineCookieStore::cookieAdded, [](const QNetworkCookie &storedCookie) {
+        qDebug() << "Stored Cookie: " << storedCookie.name() << "=" << storedCookie.value();
+    });
 
     webView->setUrl(QUrl(webUrl));
     layout->addWidget(webView, 1);
